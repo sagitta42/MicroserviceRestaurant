@@ -10,4 +10,4 @@ class OrderResponse(BaseModel):
     ready: bool
 
 
-MENU = {"Veggies": 1, "Sausage": 2, "Mushrooms": 3, "Polenta": 4}
+MENU = {"Veggies": 1, "Meat": 2, "Mushrooms": 3, "Fish": 4}

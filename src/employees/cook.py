@@ -2,13 +2,20 @@ import asyncio
 import dramatiq
 
 from src.schemas import OrderRequest
-from src.employees.kitchen import Kitchen
+from src.kitchen.stove import stove
 
-kitchen = Kitchen()
 
 @dramatiq.actor(max_retries=3)
-def take_order(dish_id: int):
+def process_order(dish_id: int):
     async def run():
-        await kitchen.grill(dish_id)
+        await stove.fry(dish_id)
 
     asyncio.run(run())
+
+
+class Cook:
+    def take_order(self, order: OrderRequest):
+        process_order.send(order.dish_id)
+
+
+cook = Cook()

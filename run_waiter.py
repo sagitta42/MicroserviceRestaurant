@@ -1,11 +1,10 @@
 import asyncio
-import random
 
 from src.customers import Customers
-from src.infrastructure.postit_board import configure_postit_board
+from src.employees.expo import configure_expo
 from src.schemas import MENU
 
-configure_postit_board()
+configure_expo()
 
 from src.employees.waiter import produce_order
 

@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "dramatiq",
             "args": [
-                "run_barker"
+                "run_expo"
             ],
         },
         {

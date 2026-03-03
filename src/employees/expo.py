@@ -3,7 +3,7 @@ from dramatiq.brokers.rabbitmq import RabbitmqBroker
 from pika import PlainCredentials
 
 
-def configure_postit_board():
+def configure_expo():
     broker = RabbitmqBroker(
         # confirm_delivery=True,
         host="127.0.0.1",

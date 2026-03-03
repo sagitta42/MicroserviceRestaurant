@@ -2,6 +2,17 @@
 
 Restaurant analogy of microservices
 
+| Term                               | Details                                             | Analogy             |                                                                    |
+| ---------------------------------- | --------------------------------------------------- | ------------------- | ------------------------------------------------------------------ |
+| Processes                          |                                                     | Employees           |                                                                    |
+| Database [`MongoDB`]               |                                                     | Post-it notes       | Source of truth on order details & status                          |
+| Queue [`RabbitMQ`]                 |                                                     | Order post-it board | Board with post-it notes with customer order information           |
+| Broker [`RabbitmqBroker`]          | Connects to `RabbitMQ`  | Expediter (expo)    | (in this case, it's just Expo's eyes)                              |
+| Actor/Consumer [`@dramatiq.actor`] | Defines what to do when a message arrives           | Cook                | Decides which tools in the kitchen need to be used for what recipe |
+| Worker (`dramatiq`)                | Pulls messages from `RabbitMQ` and executes actors  | Expediter (expo)    | Takes orders from post-it order board and distributes among cooks  |
+|                                    | Separate docker process                             |                     | Liason between dining room and kitchen                             |
+| Producer [`.send()`]               | Pushes a task/message to `RabbitMQ`                 | Waiter              | Takes orders from customers and puts post-its on the order board   |
+
 ## Setup
 
 0. Environment
@@ -21,7 +32,7 @@ Restaurant analogy of microservices
 2. Run barker
    
    ```bash
-   dramatiq run_barker
+   dramatiq run_expo
    ```
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Kitchen_brigade): Barker - takes orders from the dining room and distributes them to the various stations
@@ -31,41 +42,3 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Kitchen_brigade): Barker - takes 
    ```bash
    python run_waiter.py
    ```
-
-## Restaurant analogy
-
-Processes = employees
-
-**Broker (RabbitmqBroker)**
-
-- Connects to `RabbitMQ` - acts as a "mail system"
-
-- Must be configured in each process that sends or receives 
-  tasks
-
-**--> Post-it note board with orders**
-
-*(Note: RabbitMQ itself is the post-it note board, broker is putting/taking notes from it)
-(A digital order system could be a better analogy: broker = interface to type/read orders from, RabbitMQ = order queue itself)*
-
-**Actor / Consumer (`@dramatiq.actor`)**
-
-Defines what to do when a message arrives
-
-**--> Cook**
-
-**Worker (`dramatiq`)**
-
-- Pulls messages from `RabbitMQ` and executes actors
-
-- Separate docker process
-
-**--> Barker**
-
-**Producer (`.send()`)**
-
-- Pushes a task/message to `RabbitMQ`
-
-- Any process that knows the actor and broker
-
-**--> Waiter**

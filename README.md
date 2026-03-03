@@ -4,6 +4,14 @@ Restaurant analogy of microservices
 
 ## Setup
 
+0. Environment
+   
+   ```bash
+   python3.11 -m venv venv
+   source venv/bin/activate
+   poetry install --no-root
+   ```
+
 1. Set up docker   
    
    ```bash

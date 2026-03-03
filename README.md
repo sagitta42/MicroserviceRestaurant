@@ -1,6 +1,6 @@
-# Restaurant
+# Microservices Restaurant
 
-Microservices restaurant
+Restaurant analogy of microservices
 
 ## Setup
 
@@ -9,16 +9,18 @@ Microservices restaurant
 docker compose -f docker/docker-compose.yml up -d
 ```
 
-2. Run worker
+2. Run barker
 
 ```bash
-dramatiq run_worker
+dramatiq run_barker
 ```
 
-3. Run calls with producer
+From [Wikipedia](https://en.wikipedia.org/wiki/Kitchen_brigade): Barker - takes orders from the dining room and distributes them to the various stations
+
+3. Run waiter
 
 ```bash
-python -m src.workers.producer
+python run_waiter.py
 ```
 
 ## Restaurant analogy

@@ -7,5 +7,5 @@ postit_board = RabbitmqBroker(
     host="127.0.0.1",
     port=5672,
     virtual_host="/",
-    credentials=PlainCredentials(username="weather", password="weather"),
+    credentials=PlainCredentials(username="restaurant", password="restaurant"),
 )

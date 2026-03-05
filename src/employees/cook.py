@@ -6,12 +6,10 @@ from src.schemas import OrderRequest, OrderResult
 from src.kitchen.stove import stove
 
 
-# TODO: how can this be a class method
-# TODO: rethink concept - seems that this is the expediter, not cook
-# and instead of stove/kitchen THAT's the cook, the cook is the resource (human resource)
-# also this should/can be running in a separate docker (consumer) (?)
+# TODO: cannot be a class method - think how to imrove
+# TODO: multiple actors (cook, bartender?)
 @dramatiq.actor(max_retries=3)
-def process_order(info: dict):
+def cook(info: dict):
     order = OrderRequest(**info)
 
     async def run():
@@ -24,11 +22,3 @@ def process_order(info: dict):
     except Exception as e:
         result = OrderResult(dish_id=order.dish_id, status="failed", extra=str(e))
         post_its.update(order.id, result)
-
-
-class Cook:
-    def take_order(self, order: OrderRequest):
-        process_order.send(order.model_dump())
-
-
-cook = Cook()

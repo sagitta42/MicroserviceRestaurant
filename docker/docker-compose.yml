@@ -8,3 +8,12 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: restaurant
       RABBITMQ_DEFAULT_PASS: restaurant
+
+  mongodb:
+    image: mongo:8
+    container_name: restaurant_mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: restaurant
+      MONGO_INITDB_ROOT_PASSWORD: restaurant      

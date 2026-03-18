@@ -18,6 +18,8 @@ In this model, a waiter is the Producer while a cook in the kitchen is the Actor
 | Consumer (`dramatiq`)     | Thread inside worker fetching messages from broker                                                                                                                                                       | Expediter (expo) | Expediter's brain, eyes, and hands fetching orders from the post-it board                                                                                 |
 |                           | insert to MongoDB collection before `send()`                                                                                                                                                             |                  | Waiter writes out a post-it with order ID, dish ID etc. This post-it will later be marked as order ready to be picked up by the waiter later.             |
 
+From [Wikipedia](https://en.wikipedia.org/wiki/Kitchen_brigade): Expediter (Expo) - takes orders from the dining room and distributes them to the various stations
+
 ## Setup
 
 0. Environment
@@ -34,15 +36,13 @@ In this model, a waiter is the Producer while a cook in the kitchen is the Actor
    docker compose -f docker/docker-compose.yml up -d
    ```
 
-2. Run expo
+2. Run kitchen
    
    ```bash
-   dramatiq run_expo
+   dramatiq run_kitchen
    ```
 
-From [Wikipedia](https://en.wikipedia.org/wiki/Kitchen_brigade): Expediter (Expo) - takes orders from the dining room and distributes them to the various stations
-
-Note: expo must be run first before the waiter - otherwise waiter's orders won't have anywhere to go
+Note: kitchen must be run first before the waiter - otherwise waiter's orders won't have anywhere to go
 
 3. Run waiter
    

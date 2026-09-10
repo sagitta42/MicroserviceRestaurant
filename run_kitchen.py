@@ -1,9 +1,9 @@
 import dramatiq
 
-from src.infrastructure.order_board import order_board
+from src.infrastructure.expediter import expediter
 
-# kitchen must set up a post-it board with orders
-dramatiq.set_broker(order_board)
+# kitchen order system is managed by expediter
+dramatiq.set_broker(expediter)
 
 # kitchen has cooks
 import src.employees.cook

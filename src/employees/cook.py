@@ -2,7 +2,7 @@ import asyncio
 import dramatiq
 
 from src.infrastructure.post_its import post_its
-from src.schemas import OrderRequest, OrderResult
+from src.schemas import OrderRequest, OrderResult, OrderStatus
 from src.kitchen.stove import stove
 
 
@@ -13,12 +13,12 @@ def cook(info: dict):
     order = OrderRequest(**info)
 
     async def run():
-        ready = await stove.fry(order.dish_id)
-        result = OrderResult(dish_id=order.dish_id, status="ready")
-        post_its.update(order.id, result)
+        await stove.fry(order.dish_id)
+        # TODO: order result created by cook and written to storage (counter)
+        # waiter reads from storage if status is ready
+        post_its.update(order.id, OrderStatus.ready)
 
     try:
         asyncio.run(run())
     except Exception as e:
-        result = OrderResult(dish_id=order.dish_id, status="failed", extra=str(e))
-        post_its.update(order.id, result)
+        post_its.update(order.id, OrderStatus.failed)

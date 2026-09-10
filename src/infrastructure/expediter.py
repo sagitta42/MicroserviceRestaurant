@@ -1,8 +1,7 @@
 from dramatiq.brokers.rabbitmq import RabbitmqBroker
 from pika import PlainCredentials
 
-
-order_board = RabbitmqBroker(
+expediter = RabbitmqBroker(
     # confirm_delivery=True,
     host="127.0.0.1",
     port=5672,

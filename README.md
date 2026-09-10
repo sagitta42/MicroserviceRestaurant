@@ -25,7 +25,7 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Kitchen_brigade): Expediter (Expo
 0. Environment
    
    ```bash
-   python3.11 -m venv venv
+   python -m venv venv
    source venv/bin/activate
    poetry install --no-root
    ```

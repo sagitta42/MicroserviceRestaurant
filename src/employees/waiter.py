@@ -5,6 +5,7 @@ import uuid
 # TODO: move those to init
 from src.employees.cook import cook
 from src.infrastructure.post_its import post_its
+from src.logger import logg
 from src.schemas import MENU, OrderRequest, OrderResult, OrderStatus
 
 
@@ -18,7 +19,7 @@ class Waiter:
         self._inverse_menu: dict[int, str] = {value: key for key, value in MENU.items()}
 
     async def produce_order(self, dish_name: str):
-        print(f"[waiter] {dish_name}? Great choice!")
+        logg.info(f"[waiter] {dish_name}? Great choice!", header=True)
         dish_id = MENU[dish_name]
         order_id = str(uuid.uuid4()).split("-")[1]
         order = OrderRequest(id=order_id, dish_id=dish_id, status=OrderStatus.preparing)
@@ -29,13 +30,14 @@ class Waiter:
 
         self._active_orders.append(order_id)
 
-        print(f"[waiter] (order {order_id} coming through!)")
+        logg.info(f"[waiter] (order {order_id} coming through!)")
         cook.send(order.model_dump())
 
     async def get_orders(self) -> OrderResult | None:
+        # TODO: if earliest order is not ready, keep checking others that might be ready
         cook_is_tired = random() > 0.7
         if cook_is_tired:
-            print(f"[waiter] taking a short break...")
+            logg.info(f"[waiter] taking a short break...")
             await asyncio.sleep(2)
 
         if len(self._active_orders) == 0:
@@ -44,7 +46,10 @@ class Waiter:
         ret = self._get_order(earliest_order_id)
         # TODO: action if order is ready; happen outside with customer
         if ret is not None:
-            print(f"[waiter] Here you go - {ret.dish_name} ({earliest_order_id})")
+            logg.info(
+                f"[waiter] Here you go - {ret.dish_name} ({earliest_order_id})",
+                header=True,
+            )
         return ret
 
     def _get_order(self, order_id: str) -> OrderResult | None:
@@ -52,7 +57,6 @@ class Waiter:
         # TODO: manage None
         assert order is not None
         dish_name = self._inverse_menu[order.dish_id]
-        print(f"Order {order_id} - {dish_name} - {order.status}")
         if order.status == OrderStatus.ready:
             self._active_orders.remove(order_id)
             # TODO: order result created by cook and written to storage (counter)
@@ -60,7 +64,7 @@ class Waiter:
             ret = OrderResult(dish_name=dish_name)
             return ret
         else:
-            print(f"[waiter] (order {order_id} is  {order.status}...)")
+            logg.info(f"[waiter] (order {order_id} is  {order.status}...)")
         return None
 
 

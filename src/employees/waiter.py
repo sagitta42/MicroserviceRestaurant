@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any
+from random import random
 import uuid
 
 # TODO: move those to init
@@ -18,8 +18,9 @@ class Waiter:
         self._inverse_menu: dict[int, str] = {value: key for key, value in MENU.items()}
 
     async def produce_order(self, dish_name: str):
+        print(f"[waiter] {dish_name}? Great choice!")
         dish_id = MENU[dish_name]
-        order_id = str(uuid.uuid4())
+        order_id = str(uuid.uuid4()).split("-")[1]
         order = OrderRequest(id=order_id, dish_id=dish_id, status=OrderStatus.preparing)
 
         # TODO: create different schema for order status for MongoDB vs order pushed into queue for actor
@@ -28,16 +29,22 @@ class Waiter:
 
         self._active_orders.append(order_id)
 
+        print(f"[waiter] (order {order_id} coming through!)")
         cook.send(order.model_dump())
 
     async def get_orders(self) -> OrderResult | None:
+        cook_is_tired = random() > 0.7
+        if cook_is_tired:
+            print(f"[waiter] taking a short break...")
+            await asyncio.sleep(2)
+
         if len(self._active_orders) == 0:
             return None
-        earliest_order = self._active_orders[0]
-        ret = self._get_order(earliest_order)
-        # TODO: action if order is ready
+        earliest_order_id = self._active_orders[0]
+        ret = self._get_order(earliest_order_id)
+        # TODO: action if order is ready; happen outside with customer
         if ret is not None:
-            print(f"Here you go - {ret.dish_name}")
+            print(f"[waiter] Here you go - {ret.dish_name} ({earliest_order_id})")
         return ret
 
     def _get_order(self, order_id: str) -> OrderResult | None:
@@ -52,6 +59,8 @@ class Waiter:
             # waiter reads from storage if status is ready
             ret = OrderResult(dish_name=dish_name)
             return ret
+        else:
+            print(f"[waiter] (order {order_id} is  {order.status}...)")
         return None
 
 
